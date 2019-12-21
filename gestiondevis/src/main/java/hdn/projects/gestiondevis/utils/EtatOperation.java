@@ -1,5 +1,9 @@
 package hdn.projects.gestiondevis.utils;
 
+/**
+ * @author Gandalf
+ *
+ */
 public enum EtatOperation {
 
 	CREATE("Création"), UPDATE("Mise à jour"), DELETE ("Suppression"), SUSPEND("En StandBy"), IN_PROGRESS("En Cours"), FINISHED("Terminés"), VALID("Opération valide"), INVALID("Opération invalide");

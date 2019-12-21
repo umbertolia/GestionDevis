@@ -15,7 +15,6 @@ import hdn.projects.gestiondevis.dao.IDevisRepository;
 import hdn.projects.gestiondevis.entities.Devis;
 import hdn.projects.gestiondevis.entities.Statistiques;
 import hdn.projects.gestiondevis.entities.Travaux;
-import hdn.projects.gestiondevis.entities.Utilisateur;
 import hdn.projects.gestiondevis.exception.GestionDevisException;
 import hdn.projects.gestiondevis.utils.EtatOperation;
 import hdn.projects.gestiondevis.utils.Utilitaire;
@@ -57,8 +56,8 @@ public class GestionImpl implements IGestion {
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Devis> getEntitiesFrom(Utilisateur utilisateur) {
-		List<Devis> listDevis = devisRepository.getDevisStream(utilisateur.getId()).collect(Collectors.toList());
+	public List<Devis> getEntitiesFrom(Long IdUser) {
+		List<Devis> listDevis = devisRepository.getDevisStream(IdUser).collect(Collectors.toList());
 		Utilitaire.loguer(logger, this.getClass().toString(), new Object(){}.getClass().getEnclosingMethod().getName(), listDevis);
 		return listDevis; 
 	}
@@ -83,13 +82,13 @@ public class GestionImpl implements IGestion {
 
 	@Override
 	@Transactional(readOnly = false)
-	public EtatOperation gererTravaux(Long refDevis, Travaux travaux, EtatOperation etatOperation) throws GestionDevisException{
+	public Travaux gererTravaux(Long refDevis, Travaux travaux, EtatOperation etatOperation) throws GestionDevisException{
 		// recup du devis
 		Devis devisDB = this.getEntity(refDevis);
 		devisDB.setTravaux(travaux);
 		try {
 			devisRepository.save(devisDB);
-			return EtatOperation.VALID;
+			return travaux;
 		} catch (Exception ex) {
 			switch (etatOperation) {
 			case CREATE:
@@ -122,15 +121,16 @@ public class GestionImpl implements IGestion {
 	}
 
 	@Override
-	public Statistiques dresserBilan() throws GestionDevisException{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	@Transactional(readOnly = false)
 	public void deleteEntity(Long refEntity) throws GestionDevisException {
 		devisRepository.deleteById(refEntity);		
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Statistiques dresserBilan() throws GestionDevisException{
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

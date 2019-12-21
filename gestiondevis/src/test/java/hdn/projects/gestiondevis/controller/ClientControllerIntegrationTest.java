@@ -55,7 +55,7 @@ public class ClientControllerIntegrationTest {
 	private MockMvc mockMvc;
 
 	@MockBean
-	IUtilisateur<Utilisateur> userService;
+	IUtilisateur userService;
 
 	@Value("${controller.clientPath}")
 	private String clientControllerPath;

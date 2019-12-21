@@ -23,7 +23,7 @@ public class Utilitaire {
 		StringJoiner sj = new StringJoiner(" / ", "\n*****************************************\n", "\n*****************************************\n");
 		sj.add(nomServiceName)
 		.add(methodName)
-		.add(object.toString());
+		.add(object != null ? object.toString() : "");
 		logger.debug(sj.toString());
 	}
 

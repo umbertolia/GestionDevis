@@ -10,14 +10,14 @@ public interface IMainAction<T, V> {
 
 	List<T> getEntities() throws GestionDevisException;
 	
-	List<T> getEntitiesFrom(V v);
+	List<T> getEntitiesFrom(V refEntity);
 	
-	T getEntity(Long refEntity) throws GestionDevisException;
+	T getEntity(V refEntity) throws GestionDevisException;
 	
-	T getEntityWithOptional(Long refEntity) throws GestionDevisException;
+	T getEntityWithOptional(V refEntity) throws GestionDevisException;
 	
 	T saveOrUpdateEntity(T entity, EtatOperation etatOperation) throws GestionDevisException;
 	
-	void deleteEntity(Long refEntity) throws GestionDevisException;
+	void deleteEntity(V refEntity) throws GestionDevisException;
 	
 }

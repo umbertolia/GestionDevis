@@ -58,8 +58,8 @@ public class GestionServiceImplTest {
 		Mockito.when(devisRepository.findByReference(1L)).thenReturn(optDevis);
 		//
 		Travaux travaux = new Travaux(LocalDate.now(), EtatOperation.IN_PROGRESS, TypeOuvrage.CHARPENTE);
-		EtatOperation etatOperation = gestionService.gererTravaux(1L, travaux, EtatOperation.CREATE);
-		assertEquals(etatOperation, EtatOperation.VALID);
+		Travaux travauxDB = gestionService.gererTravaux(1L, travaux, EtatOperation.CREATE);
+		assertEquals(travaux, travauxDB);
 	}
 
 	@Test

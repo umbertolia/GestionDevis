@@ -28,7 +28,7 @@ public class GestionDevisControllerAdvice extends ResponseEntityExceptionHandler
 	@ExceptionHandler(GestionDevisException.class)
 	public ResponseEntity<Object> handleNotFound(GestionDevisException gestionDevisException) {
 		Utilitaire.loguer(logger, this.getClass().getSimpleName(), "handleException()", "GestionDevisException");
-		GestionDevisErrorDetails errorDetails = new GestionDevisErrorDetails(HttpStatus.INTERNAL_SERVER_ERROR,
+		GestionDevisErrorDetails errorDetails = new GestionDevisErrorDetails(gestionDevisException.getStatus(),
 				"GestionDevisException levée", gestionDevisException);
 		return new ResponseEntity<>(errorDetails, errorDetails.getStatus());
 	}

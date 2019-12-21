@@ -20,4 +20,7 @@ public interface IUtilisateurRepository extends JpaRepository<Utilisateur, Long>
 	
 	@Query(name="query.user.getallusersstream")
 	Stream<Utilisateur> getAllUsersStream();
+	
+	@Query(name="query.user.getclientsbygerant")
+	Stream<Utilisateur> getClientsStream(@Param("gerantID") Long idGerant);
 }

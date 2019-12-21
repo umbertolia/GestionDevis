@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -91,6 +92,17 @@ public class ClientRepositoryTest {
 					() -> assertEquals("rue Balzac", userUpdatedFromDB.getAdresse().getRue())
 			);	
 		});
+	}
+	
+	@Test
+	@Order(6)
+	@DisplayName("test sur test_FindUsersFromAnotherUser")
+	public void test_FindUsersFromAnotherUser() {
+		Stream<Utilisateur> users = userRepository.getClientsStream(1L);
+		assertAll("FindUsersFromAnother",
+				() -> assertNotNull(users),
+				() -> assertEquals(6, users.count())
+		);	
 	}
 
 }
