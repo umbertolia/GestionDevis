@@ -72,7 +72,7 @@
 			<version>4.0</version>
 		</dependency>
 
-		<!-- Permet l'utilisation duxml au lieu du json utilisé par defaut par spring -->
+		<!-- Permet l'utilisation du xml au lieu du json utilisé par defaut par spring -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-xml</artifactId>

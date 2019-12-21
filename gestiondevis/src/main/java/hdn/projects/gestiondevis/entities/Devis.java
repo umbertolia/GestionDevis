@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
@@ -40,6 +41,7 @@ public class Devis implements Serializable {
 	private Long reference;
 
 	@Column(name = "DATE_DEVIS", insertable = true, updatable = false, nullable = true)
+	@JsonFormat(pattern="dd-MM-yyyy")
 	private LocalDate dateDevis;
 	
 	@Column(name = "MONTANT_HC", insertable = true, updatable = false, nullable = false)
@@ -79,7 +81,7 @@ public class Devis implements Serializable {
 		this.dureeEstimeeJours = dureeEstimeeJours;
 		this.client = client;
 	}
-	
+
 	public Devis(LocalDate dateDevis, Double montantHC, Double taxeAppliquee, Double montantApport, boolean apportRecu,
 			int dureeEstimeeJours) {
 		this.dateDevis = dateDevis;
