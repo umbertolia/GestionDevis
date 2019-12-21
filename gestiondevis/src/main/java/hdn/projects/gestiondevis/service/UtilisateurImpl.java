@@ -102,4 +102,12 @@ public class UtilisateurImpl implements IUtilisateur<Utilisateur> {
 		// TODO Auto-generated method stub
 	}
 
+
+
+	@Override
+	public List<Utilisateur> getEntitiesFrom(Utilisateur utilisateur) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

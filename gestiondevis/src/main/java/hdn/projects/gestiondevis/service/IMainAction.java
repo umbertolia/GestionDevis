@@ -1,6 +1,6 @@
 package hdn.projects.gestiondevis.service;
 
-import java.util.stream.Stream;
+import java.util.List;
 
 import hdn.projects.gestiondevis.exception.GestionDevisException;
 import hdn.projects.gestiondevis.utils.EtatOperation;
@@ -8,9 +8,9 @@ import hdn.projects.gestiondevis.utils.EtatOperation;
 public interface IMainAction<T, V> {
 	
 
-	Stream<T> getEntities() throws GestionDevisException;
+	List<T> getEntities() throws GestionDevisException;
 	
-	Stream<T> getEntitiesFrom(V v);
+	List<T> getEntitiesFrom(V v);
 	
 	T getEntity(Long refEntity) throws GestionDevisException;
 	
