@@ -4,8 +4,15 @@
 package hdn.projects.gestiondevis.exception;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.FieldError;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -14,48 +21,58 @@ import com.fasterxml.jackson.annotation.JsonFormat;
  *
  */
 public class GestionDevisErrorDetails {
-	
+
 	private HttpStatus status;
-	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-	
+
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy 'à' hh:mm:ss")
 	private LocalDateTime timestamp;
-	
-    private String message;
-    
-    private String details;
-    
-    private GestionDevisErrorDetails() {
+
+	private List<String> messages = new ArrayList<String>();
+
+	private String typeException;
+
+	private GestionDevisErrorDetails() {
 		super();
+		messages = new ArrayList<String>();
+		timestamp = LocalDateTime.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy 'à' hh:mm:ss");
+		timestamp.format(formatter);
 	}
 
-	public GestionDevisErrorDetails(LocalDateTime timestamp, String message, String details) {
+	public GestionDevisErrorDetails(Throwable throwable, String... messages) {
 		this();
-        this.timestamp = timestamp;
-        this.message = message;
-        this.details = details;
-    }
-  
-    public GestionDevisErrorDetails(HttpStatus status)
-	{
+		this.typeException = throwable.getClass().getCanonicalName();
+		this.messages = messages != null ? Arrays.asList(messages)
+				: Arrays.asList(new String[] { "Erreur inattendue / inconnue" });
+	}
+
+	GestionDevisErrorDetails(Throwable throwable, HttpStatus status, String... messages) {
+		this(throwable, messages);
+		this.status = status;
+	}
+
+	public GestionDevisErrorDetails(Throwable throwable, Stream<FieldError> messagesStream) {
+		this();
+		this.typeException = throwable.getClass().getCanonicalName();
+		this.messages = messagesStream != null ? messagesStream.map(field -> field.getDefaultMessage()).collect(Collectors.toList())
+				: Arrays.asList(new String[] { "Erreur inattendue / inconnue" });
+	}
+
+	public GestionDevisErrorDetails(HttpStatus status) {
 		this();
 		this.status = status;
 	}
 
-    public GestionDevisErrorDetails(HttpStatus status, Throwable ex)
-	{
+	public GestionDevisErrorDetails(Throwable throwable, HttpStatus status) {
 		this();
 		this.status = status;
-		this.message = "Unexpected error";
-		this.details = ex.getLocalizedMessage();
+		this.typeException = throwable.getClass().getCanonicalName();
+		this.messages.add("Erreur inattendue / inconnue");
 	}
 
-    GestionDevisErrorDetails(HttpStatus status, String message, Throwable ex)
-	{
-		this();
+	GestionDevisErrorDetails(Throwable throwable, HttpStatus status, Stream<FieldError> messagesStream) {
+		this(throwable, messagesStream);
 		this.status = status;
-		this.message = message;
-		this.details = ex.getLocalizedMessage();
 	}
 
 	public HttpStatus getStatus() {
@@ -74,22 +91,20 @@ public class GestionDevisErrorDetails {
 		this.timestamp = timestamp;
 	}
 
-	public String getMessage() {
-		return message;
+	public List<String> getMessages() {
+		return messages;
 	}
 
-	public void setMessage(String message) {
-		this.message = message;
+	public void setMessages(List<String> messages) {
+		this.messages = messages;
 	}
 
-	public String getDetails() {
-		return details;
+	public String getTypeException() {
+		return typeException;
 	}
 
-	public void setDetails(String details) {
-		this.details = details;
+	public void setTypeException(String typeException) {
+		this.typeException = typeException;
 	}
-    
-    
-    
+
 }

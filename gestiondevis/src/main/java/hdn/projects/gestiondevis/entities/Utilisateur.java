@@ -21,6 +21,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -62,23 +64,29 @@ public abstract class Utilisateur implements Serializable{
     private Long id;
 
     @Column(name = "NOM", insertable=true, updatable=true, nullable=false)
+    @NotEmpty(message = "Nom de l'utilisateur non renseigné")
 	private String nom;
     
     @Column(name = "PRENOM", insertable=true, updatable=true, nullable=false)
+    @NotEmpty(message = "Prénom de l'utilisateur non renseigné")
 	private String prenom;
 	
     @Column(name = "LOGIN", unique=true, insertable=true, updatable=true, nullable=false)
+    @NotEmpty(message = "Login de l'utilisateur non renseigné")
     private String login;
     
     @Column(name = "USER_PASSWORD", insertable=true, updatable=true, nullable=false)
+    @NotEmpty(message = "Mot de passe de l'utilisateur non renseigné")
     private String password;
     
     @ManyToMany(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinTable(name = "USER_ROLE", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
+    @Valid
     private Set<Role> roles= new HashSet<>();	
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "address_id", referencedColumnName = "id")
+    @Valid
     private Adresse adresse;
     
     public Utilisateur() {
@@ -184,10 +192,7 @@ public abstract class Utilisateur implements Serializable{
              return false;
          }
          Utilisateur user = (Utilisateur) obj;
-         
-         return user.nom.equalsIgnoreCase(this.nom) &&
-        		 user.prenom.equalsIgnoreCase(this.prenom) &&
-        		 user.id == this.id;        
+         return user.login.equalsIgnoreCase(this.login) ;        
     }	
 
 }

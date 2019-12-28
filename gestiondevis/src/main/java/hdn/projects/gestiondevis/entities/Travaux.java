@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -40,12 +41,14 @@ public class Travaux implements Serializable{
     private int id;
 	
 	@Column(name = "DATE_DEBUT", insertable = true, updatable = false, nullable = false)
+	@NotEmpty(message = "Date de dédut des travaux non renseignée")
 	private LocalDate dateDebut;
 	
 	@Column(name = "NBR_JOURS_EFFECTUES", insertable = true, updatable = true, nullable = true)
 	private int nbrJoursEffetues;
 	
 	@Column(name = "ETAT", insertable = true, updatable = true, nullable = false)
+	@NotEmpty(message = "Etat des travaux non renseigné")
 	private EtatOperation etat;
 	
 	@Column(name = "TRAVAUX_PAYES", insertable = true, updatable = true, nullable = false)
@@ -120,6 +123,14 @@ public class Travaux implements Serializable{
 	@XmlElement
 	public void setTravauxPayes(boolean travauxPayes) {
 		this.travauxPayes = travauxPayes;
+	}
+	
+	public TypeOuvrage getTypeOuvrage() {
+		return typeOuvrage;
+	}
+
+	public void setTypeOuvrage(TypeOuvrage typeOuvrage) {
+		this.typeOuvrage = typeOuvrage;
 	}
 
 	public Devis getDevis() {

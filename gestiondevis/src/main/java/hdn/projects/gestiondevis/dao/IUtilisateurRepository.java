@@ -15,8 +15,8 @@ public interface IUtilisateurRepository extends JpaRepository<Utilisateur, Long>
 	
 	Optional<Utilisateur> findById(Long userId);
 	
-	@Query(name="query.user.findbyloginpassword")
-	Optional<Utilisateur> findByLoginPassword(@Param("login") String login, @Param("password") String password);
+	@Query(name="query.user.findbylogin")
+	Optional<Utilisateur> findByLoginPassword(@Param("login") String login);
 	
 	@Query(name="query.user.getallusersstream")
 	Stream<Utilisateur> getAllUsersStream();

@@ -1,5 +1,9 @@
 package hdn.projects.gestiondevis.utils;
 
+/**
+ * @author Gandalf
+ *
+ */
 public enum TypeOuvrage {
 
 	DIVERS("Divers Travaux"), ELECTRICITE("Electricité"), MACONNERIE("Maçonnerie"), CHARPENTE("Charpente"), PLOMBERIE(

@@ -49,7 +49,7 @@ public class DevisRepositoryTest {
 	@DisplayName("test sur FindByDevisId")
 	public void test2_FindByDevisId() {
 		Optional<Devis> optDevis = devisRepository.findByReference(1L);
-		optDevis.ifPresent(devis -> assertTrue(devis.getMontantHC() == 1200));
+		optDevis.ifPresent(devis -> assertTrue(devis.getMontantHT() == 1200));
 	}
 	
 	@Test

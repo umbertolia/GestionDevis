@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import hdn.projects.gestiondevis.entities.Devis;
 import hdn.projects.gestiondevis.entities.Travaux;
+import hdn.projects.gestiondevis.exception.GestionDevisErrorDetails;
 import hdn.projects.gestiondevis.exception.GestionDevisException;
 import hdn.projects.gestiondevis.service.IGestion;
 import hdn.projects.gestiondevis.utils.EtatOperation;
@@ -110,7 +112,7 @@ public class GestionDevisController {
 			throws GestionDevisException {
 
 		devisService.deleteEntity(reference);
-		return new ResponseEntity<Void>(HttpStatus.GONE);
+		return new ResponseEntity<Void>(HttpStatus.ACCEPTED);
 	}
 
 
@@ -153,6 +155,10 @@ public class GestionDevisController {
 	}
 
 	
-	
+	 @ExceptionHandler({ RuntimeException.class })
+	    public ResponseEntity<Object> handleException(Exception exception) throws GestionDevisException {
+		 GestionDevisErrorDetails errorDetails = new GestionDevisErrorDetails(exception, "GestionDevisException levée");
+			return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	    }
 	
 }

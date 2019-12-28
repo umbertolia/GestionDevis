@@ -18,6 +18,6 @@ public interface IMainAction<T, V> {
 	
 	T saveOrUpdateEntity(T entity, EtatOperation etatOperation) throws GestionDevisException;
 	
-	void deleteEntity(V refEntity) throws GestionDevisException;
+	EtatOperation deleteEntity(V refEntity) throws GestionDevisException;
 	
 }

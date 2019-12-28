@@ -65,6 +65,12 @@
 			<artifactId>spring-boot-starter-security</artifactId>
 		</dependency>
 
+		<!-- API pour envoyer un mail. -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
+
 		<!-- Permet l'utilisation des collections Apache -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -72,11 +78,25 @@
 			<version>4.0</version>
 		</dependency>
 
-		<!-- Permet l'utilisation du xml au lieu du json utilisé par defaut par spring -->
+		<!-- Permet l'utilisation du xml au lieu du json utilisé par defaut par 
+			spring -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-xml</artifactId>
 		</dependency>
+
+		<!-- Pour la doc -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.9.2</version>
+		</dependency>
+
 
 		<!-- PARTIE TEST -->
 		<dependency>
@@ -127,6 +147,8 @@
 	<build>
 		<plugins>
 			<plugin>
+				<!-- on délègue la construction automatique des artefacts du projet library 
+					à Spring Boot qui utilisera maven pour le faire -->
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>

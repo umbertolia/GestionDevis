@@ -32,7 +32,7 @@ public class Client extends Utilisateur {
 
 	private static final long serialVersionUID = 4263650123248454996L;
 
-	@ManyToOne(fetch = FetchType.LAZY,  cascade = CascadeType.PERSIST)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "GERANT_ID")
 	@JsonIgnore
 	private Gerant gerant;

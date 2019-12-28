@@ -27,6 +27,11 @@ public class GestionDevisException extends RuntimeException {
         this.errorCode = errorCode;
     }
     
+    public GestionDevisException(String message, HttpStatus status) {
+        super(message);
+        this.status = status;
+    }
+    
     public GestionDevisException(String errorCode, String message, HttpStatus status) {
         super(message);
         this.errorCode = errorCode;

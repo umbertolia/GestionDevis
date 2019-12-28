@@ -10,6 +10,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -33,15 +36,19 @@ public class Adresse implements Serializable {
     private int id;
 	
 	@Column(name = "NUMERO", insertable=true, updatable=true, nullable=false)
+	@Min(value = 1, message = "Le numéro de l'adresse ne doit pas etre 0")
 	private int numero;
 	
 	@Column(name = "RUE", insertable=true, updatable=true, nullable=false)
+	@NotEmpty(message = "Rue de l'adresse non renseigné")
 	private String rue;
 	
 	@Column(name = "CP", insertable=true, updatable=true, nullable=false)
+	@Digits(integer = 5, fraction = 0, message = "Le Code Postal doit contenir 5 digits")
 	private int codePostal;
 	
 	@Column(name = "VILLE", insertable=true, updatable=true, nullable=false)
+	@NotEmpty(message = "Ville de l'adresse non renseigné")
 	private String ville;
 	
 	@Column(name = "DETAILS", insertable=true, updatable=true, nullable=true)

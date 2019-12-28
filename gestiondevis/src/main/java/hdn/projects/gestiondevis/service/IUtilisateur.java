@@ -12,9 +12,9 @@ import hdn.projects.gestiondevis.exception.GestionDevisException;
  */
 public interface IUtilisateur extends IMainAction<Utilisateur, Long> {
 					
-	Utilisateur getEntity(String login, String password) throws GestionDevisException;
+	Utilisateur getEntity(String login) throws GestionDevisException;
 	
-	void contacterEntity(Utilisateur entity, String message) throws GestionDevisException;
+	boolean contacterEntity(Utilisateur entity, String message) throws GestionDevisException;
 	
 	
 }

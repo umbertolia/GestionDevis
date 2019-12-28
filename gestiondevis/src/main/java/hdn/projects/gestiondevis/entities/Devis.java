@@ -17,6 +17,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -41,11 +43,12 @@ public class Devis implements Serializable {
 	private Long reference;
 
 	@Column(name = "DATE_DEVIS", insertable = true, updatable = false, nullable = true)
+	@NotEmpty(message = "Date du devis non renseignée")
 	@JsonFormat(pattern="dd-MM-yyyy")
 	private LocalDate dateDevis;
 	
-	@Column(name = "MONTANT_HC", insertable = true, updatable = false, nullable = false)
-	private Double montantHC; 
+	@Column(name = "MONTANT_HT", insertable = true, updatable = false, nullable = false)
+	private Double montantHT; 
 
 	@Column(name = "TAXE", insertable = true, updatable = false, nullable = false)
 	private Double taxeAppliquee;
@@ -64,6 +67,7 @@ public class Devis implements Serializable {
 	
 	@OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "travaux_id", referencedColumnName = "id")
+	@Valid
 	private Travaux travaux;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
@@ -75,17 +79,17 @@ public class Devis implements Serializable {
 		
 	}
 
-	public Devis(LocalDate dateDevis, Double montantHC, int dureeEstimeeJours, Client client) {
+	public Devis(LocalDate dateDevis, Double montantHT, int dureeEstimeeJours, Client client) {
 		this.dateDevis = dateDevis;
-		this.montantHC = montantHC;
+		this.montantHT = montantHT;
 		this.dureeEstimeeJours = dureeEstimeeJours;
 		this.client = client;
 	}
 
-	public Devis(LocalDate dateDevis, Double montantHC, Double taxeAppliquee, Double montantApport, boolean apportRecu,
+	public Devis(LocalDate dateDevis, Double montantHT, Double taxeAppliquee, Double montantApport, boolean apportRecu,
 			int dureeEstimeeJours) {
 		this.dateDevis = dateDevis;
-		this.montantHC = montantHC;
+		this.montantHT = montantHT;
 		this.taxeAppliquee = taxeAppliquee;
 		this.montantApport = montantApport;
 		this.apportRecu = apportRecu;
@@ -115,13 +119,13 @@ public class Devis implements Serializable {
 		this.dateDevis = dateDevis;
 	}
 
-	public Double getMontantHC() {
-		return montantHC;
+	public Double getMontantHT() {
+		return montantHT;
 	}
 	
 	@XmlElement
-	public void setMontantHC(Double montantHC) {
-		this.montantHC = montantHC;
+	public void setMontantHT(Double montantHT) {
+		this.montantHT = montantHT;
 	}
 
 	public Double getTaxeAppliquee() {
@@ -162,7 +166,7 @@ public class Devis implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Devis [reference=" + reference + ", montantHC=" + montantHC + ", taxeAppliquee=" + taxeAppliquee
+		return "Devis [reference=" + reference + ", montantHT=" + montantHT + ", taxeAppliquee=" + taxeAppliquee
 				+ ", montantApport=" + montantApport + ", dureeEstimeeJours=" + dureeEstimeeJours + "]";
 	}
 
@@ -184,7 +188,16 @@ public class Devis implements Serializable {
 		this.client = client;
 	}
 	
-	
+    @Override
+    public boolean equals(Object obj) {
+    	 if (obj == this) return true;
+         if (!(obj instanceof Devis)) {
+             return false;
+         }
+         Devis devis = (Devis) obj;
+         return devis.reference == this.reference ;        
+    }	
+
 	
 }
 

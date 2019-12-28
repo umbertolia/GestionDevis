@@ -31,7 +31,7 @@ public class Gerant extends Utilisateur {
 	@Column(name = "SIREN", unique=true, updatable = true, nullable = false)
 	private long numeroSiren;
 
-	@OneToMany(mappedBy = "gerant", cascade = CascadeType.ALL, orphanRemoval = false)
+	@OneToMany(mappedBy = "gerant", cascade = CascadeType.ALL)
 	private Set<Client> clients = new HashSet<Client>();
 
 	public Gerant() {

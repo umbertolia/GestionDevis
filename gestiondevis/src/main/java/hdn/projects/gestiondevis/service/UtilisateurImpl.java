@@ -1,6 +1,3 @@
-/* *
- * 
- */
 package hdn.projects.gestiondevis.service;
 
 import java.util.List;
@@ -11,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,34 +35,53 @@ public class UtilisateurImpl implements IUtilisateur {
 	private IUtilisateurRepository userRepository;
 
 	@Autowired
+	private JavaMailSender javaMailSender;
+
+	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	@Override
 	@Transactional(readOnly = false)
-	public Utilisateur saveOrUpdateEntity(Utilisateur utilisateur, EtatOperation etatOperation) throws GestionDevisException {
-		
-		Utilitaire.loguer(logger, this.getClass().toString(), new Object(){}.getClass().getEnclosingMethod().getName(), null);
-		switch (etatOperation) {
-			case CREATE : {
-				//
-				utilisateur.setPassword(bCryptPasswordEncoder.encode(utilisateur.getPassword()));
-				try {
-					return userRepository.save(utilisateur);
-				}
-				catch (Exception ex) {
-					throw new GestionDevisException("Create User Error",
-							"Erreur de création de l'utilisateur: " + utilisateur.getLogin(),
-							HttpStatus.INTERNAL_SERVER_ERROR);
-				}
-				
+	public Utilisateur saveOrUpdateEntity(Utilisateur utilisateur, EtatOperation typeOperation) throws GestionDevisException {
+
+		Utilitaire.loguer(logger, this.getClass().toString(), new Object() {
+		}.getClass().getEnclosingMethod().getName(), utilisateur);
+
+		switch (typeOperation) {
+
+		case CREATE: {
+			// le user ne doit pas exister
+			Utilisateur userDB = this.getEntity(utilisateur.getLogin());
+			if (utilisateur.equals(userDB)) {
+				// le user avec ce login existe
+				throw new GestionDevisException("Le user avec le login " + utilisateur.getLogin() + " existe déja",
+						HttpStatus.CONFLICT);
 			}
-			default : {
-				this.getEntityWithOptional(utilisateur.getId()); 
-				// TODO autres cas ?
-				return null;
+			utilisateur.setPassword(bCryptPasswordEncoder.encode(utilisateur.getPassword()));
+			try {
+				return userRepository.save(utilisateur);
+			} catch (Exception ex) {
+				throw new GestionDevisException("Erreur de création de l'utilisateur: " + utilisateur.getLogin(),
+						ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
-	
+		case UPDATE: {
+			// le user doit exister -> on remonte une exception a defaut
+			this.getEntityWithOptional(utilisateur.getId());
+			try {
+				return userRepository.save(utilisateur);
+			} catch (Exception ex) {
+				throw new GestionDevisException("Erreur de création de l'utilisateur: " + utilisateur.getLogin(),
+						ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+		}
+		
+		default: {
+			return null;
+		}
+		}
+		
+
 	}
 
 	@Override
@@ -84,11 +101,7 @@ public class UtilisateurImpl implements IUtilisateur {
 		this.getEntityWithOptional(idUser);
 
 		List<Utilisateur> listUser = userRepository.getClientsStream(idUser).collect(Collectors.toList());
-		if (listUser.isEmpty()) {
-			throw new GestionDevisException("getEntitiesFrom",
-					"Erreur de recup des utilisateurs liés à l'utilisateur avec l'id : " + idUser,
-					HttpStatus.NOT_FOUND);
-		}
+
 		Utilitaire.loguer(logger, this.getClass().toString(), new Object() {
 		}.getClass().getEnclosingMethod().getName(), listUser);
 		return listUser;
@@ -106,30 +119,46 @@ public class UtilisateurImpl implements IUtilisateur {
 		Optional<Utilisateur> optUser = userRepository.findById(refClient);
 		optUser.orElseThrow(() -> new GestionDevisException("Get User Error",
 				"Erreur de recuperation de l'utilisateur avec id : " + refClient, HttpStatus.NOT_FOUND));
+		Utilitaire.loguer(logger, this.getClass().toString(), new Object() {
+		}.getClass().getEnclosingMethod().getName(), optUser.get());
 		return optUser.get();
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public Utilisateur getEntity(String login, String password) throws GestionDevisException {
-		Optional<Utilisateur> optUser = userRepository.findByLoginPassword(login, password);
+	public Utilisateur getEntity(String login) throws GestionDevisException {
+		Optional<Utilisateur> optUser = userRepository.findByLoginPassword(login);
 		optUser.orElseThrow(() -> new GestionDevisException("Get User Error",
 				"Erreur de recuperation de l'utilisateur avec le login : " + login, HttpStatus.NOT_FOUND));
+		Utilitaire.loguer(logger, this.getClass().toString(), new Object() {
+		}.getClass().getEnclosingMethod().getName(), optUser.get());
 		return optUser.get();
 	}
 
 	@Override
 	@Transactional(readOnly = false)
-	public void deleteEntity(Long refClient) throws GestionDevisException {
+	public EtatOperation deleteEntity(Long refEntity) throws GestionDevisException {
 
-		this.getEntityWithOptional(refClient);
+		this.getEntityWithOptional(refEntity);
 		//
-		userRepository.deleteById(refClient);
+		userRepository.deleteById(refEntity);
+		Utilitaire.loguer(logger, this.getClass().toString(), new Object() {
+		}.getClass().getEnclosingMethod().getName(), refEntity);
+		return EtatOperation.VALID;
 	}
 
 	@Override
-	public void contacterEntity(Utilisateur client, String message) throws GestionDevisException {
+	public boolean contacterEntity(Utilisateur client, String message) throws GestionDevisException {
 		// TODO Auto-generated method stub
-	}
+		/*
+		 * SimpleMailMessage mail = new SimpleMailMessage();
+		 * mail.setFrom(loanMailDto.MAIL_FROM); mail.setTo(customer.getEmail());
+		 * mail.setSentDate(new Date()); mail.setSubject(loanMailDto.getEmailSubject());
+		 * mail.setText(loanMailDto.getEmailContent()); javaMailSender.send(mail); try {
+		 * javaMailSender.send(mail); } catch (MailException e) { return new
+		 * ResponseEntity<Boolean>(false, HttpStatus.FORBIDDEN); }
+		 */
+		return false;
 
+	}
 }

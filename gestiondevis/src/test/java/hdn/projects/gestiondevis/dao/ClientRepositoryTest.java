@@ -47,7 +47,7 @@ public class ClientRepositoryTest {
 	@Order(2)
 	@DisplayName("test sur test_FindByLogin")
 	public void test_FindByLogin() {
-		Optional<Utilisateur> optUser = userRepository.findByLoginPassword("admin", "admin");
+		Optional<Utilisateur> optUser = userRepository.findByLoginPassword("admin");
 		optUser.ifPresent(user -> assertEquals("admin", user.getLogin()));
 	}
 

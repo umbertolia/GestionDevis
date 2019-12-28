@@ -3,6 +3,7 @@ package hdn.projects.gestiondevis.entities;
 import java.io.Serializable;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
  
@@ -19,6 +20,7 @@ public class Role implements Serializable{
 	private int id;
  
 	@Column(name="ROLE_NAME", updatable = true, nullable = false)
+	@NotEmpty(message = "Le nom du rôle doit être renseigné")
 	private String roleName;
  
 	public Role(){
